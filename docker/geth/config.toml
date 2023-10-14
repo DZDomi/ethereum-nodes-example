@@ -7,6 +7,7 @@ StateScheme = "path"
 DataDir = "/opt/ethereum/execution"
 HTTPHost = "0.0.0.0"
 HTTPPort = 8545
+HTTPVirtualHosts = ["*"]
 # Needed for admin_peers function
 HTTPModules = ["admin"]
 AuthAddr = "0.0.0.0"
