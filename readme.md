@@ -113,9 +113,8 @@ and prometheus.
 Make sure you have valid AWS credentials, so you can run the following command to set the newly 
 created cluster as the current kube context:
 
-[//]: # (TODO: Cluster name)
 ```shell
-aws eks update-kubeconfig --name poc
+aws eks update-kubeconfig --name ethereum-nodes-example
 ```
 
 You can verify the connection with:

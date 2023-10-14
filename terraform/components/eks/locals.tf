@@ -1,5 +1,5 @@
 locals {
-  name = "poc"
+  name = "ethereum-nodes-example"
 
   cluster_version = "1.28"
 

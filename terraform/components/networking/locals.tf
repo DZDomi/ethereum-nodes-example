@@ -1,5 +1,5 @@
 locals {
-  name = "poc"
+  name = "ethereum-nodes-example"
 
   # Note: Arbitrary chosen, in a real setup you would have to make
   # sure to avoid any ip range collisions between different environments

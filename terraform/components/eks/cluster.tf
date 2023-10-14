@@ -5,12 +5,12 @@ module "eks" {
   cluster_name    = local.name
   cluster_version = local.cluster_version
 
-  vpc_id = data.aws_vpc.main.id
+  vpc_id     = data.aws_vpc.main.id
   subnet_ids = concat(data.aws_subnets.private.ids, data.aws_subnets.public.ids)
 
   # Normally they should only be in private subnets and never be public!
   # This is only for this example, so we do not need to run a bastion host or similar
-  control_plane_subnet_ids = data.aws_subnets.public.ids
+  control_plane_subnet_ids       = data.aws_subnets.public.ids
   cluster_endpoint_public_access = true
   cluster_endpoint_public_access_cidrs = [
     local.my_ip

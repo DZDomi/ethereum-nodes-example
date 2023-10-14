@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/DZDomi/ethereum-node-poc/go-monitor/internal/config"
-	"github.com/DZDomi/ethereum-node-poc/go-monitor/internal/rpc"
-	"github.com/DZDomi/ethereum-node-poc/go-monitor/internal/util"
+	"github.com/DZDomi/ethereum-nodes-example/go-monitor/internal/config"
+	"github.com/DZDomi/ethereum-nodes-example/go-monitor/internal/rpc"
+	"github.com/DZDomi/ethereum-nodes-example/go-monitor/internal/util"
 	"log/slog"
 	"time"
 )

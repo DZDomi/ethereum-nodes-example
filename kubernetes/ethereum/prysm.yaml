@@ -56,7 +56,7 @@ spec:
         fsGroup: 65000
       containers:
         - name: prysm
-          image: <aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com/poc/prysm:v4.0.8
+          image: <aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com/ethereum-nodes-example/prysm:v4.0.8
           ports:
             - containerPort: 3500
               name: rpc

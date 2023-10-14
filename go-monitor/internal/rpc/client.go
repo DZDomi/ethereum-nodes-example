@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/DZDomi/ethereum-node-poc/go-monitor/internal/domain"
+	"github.com/DZDomi/ethereum-nodes-example/go-monitor/internal/domain"
 	"io"
 	"log/slog"
 	"net/http"

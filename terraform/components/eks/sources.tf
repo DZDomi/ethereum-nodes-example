@@ -2,7 +2,6 @@ data "aws_availability_zones" "current" {
   state = "available"
 }
 
-# TODO: Name
 data "aws_vpc" "main" {
   filter {
     name = "tag:Name"

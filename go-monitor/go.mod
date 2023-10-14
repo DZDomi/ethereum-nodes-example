@@ -1,4 +1,4 @@
-module github.com/DZDomi/ethereum-node-poc/go-monitor
+module github.com/DZDomi/ethereum-nodes-example/go-monitor
 
 go 1.21.1
 

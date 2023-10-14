@@ -17,7 +17,7 @@ spec:
         name: system
       containers:
         - name: monitor
-          image: <aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com/poc/monitor:v1.0.0
+          image: <aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com/ethereum-nodes-example/monitor:v1.0.0
           envFrom:
             - configMapRef:
                 name: monitor
