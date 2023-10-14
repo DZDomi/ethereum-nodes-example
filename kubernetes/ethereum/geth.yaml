@@ -10,6 +10,8 @@ spec:
       port: 80
   selector:
     app: geth
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
 ---
 apiVersion: v1
 kind: Service
@@ -23,6 +25,8 @@ spec:
       port: 80
   selector:
     app: geth
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
 ---
 apiVersion: v1
 kind: Service
@@ -44,20 +48,8 @@ spec:
       protocol: UDP
   selector:
     app: geth
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: geth
-  name: chaindata
-spec:
-  storageClassName: blockchain-storage
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      # Note: Obviously in reality this would be more like 1-2 Terabytes
-      storage: 100Gi
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -81,6 +73,15 @@ spec:
     spec:
       nodeSelector:
         name: nodes
+      # Since we are using node ports, we need to make sure to not schedule the same
+      # p2p client on the same machine, otherwise request will get routed to the wrong service
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app: geth
       securityContext:
         fsGroup: 65000
       containers:
@@ -99,6 +100,11 @@ spec:
               protocol: UDP
             - containerPort: 6060
               name: metrics
+          resources:
+            requests:
+              memory: "10Gi"
+            limits:
+              memory: "16Gi"
           volumeMounts:
             - name: jwt-shared
               readOnly: true
@@ -112,3 +118,14 @@ spec:
         - name: chaindata
           persistentVolumeClaim:
             claimName: chaindata
+  volumeClaimTemplates:
+    - metadata:
+        name: chaindata
+      spec:
+        storageClassName: blockchain-storage
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            # Note: Obviously in reality this would be more like 1-2 Terabytes
+            storage: 100Gi

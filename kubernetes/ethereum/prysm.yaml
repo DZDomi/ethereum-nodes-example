@@ -18,20 +18,8 @@ spec:
       protocol: TCP
   selector:
     app: prysm
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: prysm
-  name: chaindata
-spec:
-  storageClassName: blockchain-storage
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      # Note: Obviously in reality this would be more like 300 - 400 Gigabytes
-      storage: 100Gi
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -55,6 +43,15 @@ spec:
     spec:
       nodeSelector:
         name: nodes
+      # Since we are using node ports, we need to make sure to not schedule the same
+      # p2p client on the same machine, otherwise request will get routed to the wrong service
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app: prysm
       securityContext:
         fsGroup: 65000
       containers:
@@ -71,6 +68,11 @@ spec:
               protocol: TCP
             - containerPort: 6060
               name: metrics
+          resources:
+            requests:
+              memory: "3Gi"
+            limits:
+              memory: "16Gi"
           volumeMounts:
             - name: jwt-shared
               readOnly: true
@@ -84,3 +86,14 @@ spec:
         - name: chaindata
           persistentVolumeClaim:
             claimName: chaindata
+  volumeClaimTemplates:
+    - metadata:
+        name: chaindata
+      spec:
+        storageClassName: blockchain-storage
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            # Note: Obviously in reality this would be more like 300 - 400 Gigabytes
+            storage: 100Gi

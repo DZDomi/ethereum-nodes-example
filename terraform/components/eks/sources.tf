@@ -41,5 +41,5 @@ data "aws_subnets" "public" {
 }
 
 data "http" "my_ip" {
-  url = "https://ipv4.icanhazip.com/"
+  url = "https://v4.ident.me/"
 }

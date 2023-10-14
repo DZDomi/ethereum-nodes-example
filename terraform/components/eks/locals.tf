@@ -17,6 +17,8 @@ locals {
       # Note: Reference here:
       # https://geth.ethereum.org/docs/getting-started/hardware-requirements
       # Quad core/16gb RAM. Can ofc be changed if more load is expected
+      # In a real production setup you will have a pool of worker nodes, that
+      # would distribute the load for all different kinds of blockchain daemons
       instance_type = "m7g.xlarge"
 
       min_size     = 0
