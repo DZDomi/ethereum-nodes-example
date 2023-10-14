@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: go-monitor
+  name: monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      labels:
+        app: monitor
+    spec:
+      nodeSelector:
+        name: system
+      containers:
+        - name: monitor
+          image: 320786661812.dkr.ecr.eu-central-1.amazonaws.com/poc/monitor:v1.0.0
+          envFrom:
+            - configMapRef:
+                name: monitor

@@ -74,7 +74,7 @@ func (c *client) doRequest(id uint, method string, data any) error {
 	if err != nil {
 		return err
 	}
-	response, err := c.httpClient.Post(c.targetUrl.String(), "application/json", request)
+	response, err := c.httpClient.Post(c.targetUrl.String(), defaultContentType, request)
 	if err != nil {
 		return err
 	}

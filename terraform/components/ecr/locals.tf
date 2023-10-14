@@ -3,6 +3,8 @@ locals {
 
   repositories = [
     "geth",
-    "prysm"
+    "prysm",
+
+    "monitor"
   ]
 }
