@@ -1,0 +1,13 @@
+accept-terms-of-use: true
+
+datadir: /opt/ethereum/consensus
+
+execution-endpoint: http://geth-auth-rpc.geth.svc.cluster.local
+jwt-secret: /opt/ethereum/shared/jwt.hex
+
+# Note: These are different ports, so we can use node group ports
+p2p-udp-port: 30400
+p2p-tcp-port: 30500
+
+monitoring-host: 0.0.0.0
+monitoring-port: 6060

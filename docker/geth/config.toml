@@ -1,0 +1,19 @@
+[Eth]
+SyncMode = "snap"
+# Note: This uses the the new scheme for pruning, available from version 1.13.0
+StateScheme = "path"
+
+[Node]
+DataDir = "/opt/ethereum/execution"
+HTTPHost = "0.0.0.0"
+HTTPPort = 8545
+# Needed for admin_peers function
+HTTPModules = ["admin"]
+AuthAddr = "0.0.0.0"
+AuthPort = 8551
+AuthVirtualHosts = ["*"]
+JWTSecret = "/opt/ethereum/shared/jwt.hex"
+
+[Node.P2P]
+MaxPeers = 50
+ListenAddr = ":30303"

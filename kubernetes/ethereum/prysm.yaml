@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prysm
+  name: prysm-p2p
+spec:
+  type: NodePort
+  ports:
+    - name: p2p-upd
+      targetPort: p2p-udp
+      port: 30400
+      nodePort: 30400
+      protocol: UDP
+    - name: p2p-tcp
+      targetPort: p2p-tcp
+      port: 30500
+      nodePort: 30500
+      protocol: TCP
+  selector:
+    app: prysm
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: prysm
+  name: chaindata
+spec:
+  storageClassName: blockchain-storage
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      # Note: Obviously in reality this would be more like 300 - 400 Gigabytes
+      storage: 100Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prysm
+  namespace: prysm
+spec:
+  serviceName: "prysm"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prysm
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "6060"
+      labels:
+        app: prysm
+    spec:
+      nodeSelector:
+        name: nodes
+      securityContext:
+        fsGroup: 65000
+      containers:
+        - name: prysm
+          image: 320786661812.dkr.ecr.eu-central-1.amazonaws.com/poc/prysm:v4.0.8
+          ports:
+            - containerPort: 3500
+              name: rpc
+            - containerPort: 30400
+              name: p2p-udp
+              protocol: UDP
+            - containerPort: 30500
+              name: p2p-tcp
+              protocol: TCP
+            - containerPort: 6060
+              name: metrics
+          volumeMounts:
+            - name: jwt-shared
+              readOnly: true
+              mountPath: /opt/ethereum/shared
+            - name: chaindata
+              mountPath: /opt/ethereum/consensus
+      volumes:
+        - name: jwt-shared
+          secret:
+            secretName: jwt-shared
+        - name: chaindata
+          persistentVolumeClaim:
+            claimName: chaindata
