@@ -86,7 +86,7 @@ spec:
         fsGroup: 65000
       containers:
         - name: geth
-          image: 320786661812.dkr.ecr.eu-central-1.amazonaws.com/poc/geth:v1.13.3
+          image: <aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com/poc/geth:v1.13.3
           ports:
             - containerPort: 8545
               name: rpc

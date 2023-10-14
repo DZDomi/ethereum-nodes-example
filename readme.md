@@ -2,7 +2,7 @@
 
 This example repository provides the infrastructure and deployment configuration for an ethereum
 execution and consensus client. Additionally, it offers monitoring via prometheus and grafana.
-All the mentioned software is running on AWS in an EKS cluster.
+All the mentioned software is running on AWS in an EKS cluster with ARM (Graviton) nodes.
 
 # Setup
 
@@ -185,7 +185,7 @@ openssl rand -hex 32 | tr -d "\n"
 
 Take the output from the command and set it in `kubernetes/ethereum/secrets.yaml` in both `SETME` fields.
 
-After this is set, you can now run the following command:
+After this is set, **make sure you have a valid connection to your kubernetes cluster**, so you can run the following command:
 
 ```shell
 ./scripts/deploy-kubernetes.sh
