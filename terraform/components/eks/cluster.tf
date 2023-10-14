@@ -6,14 +6,11 @@ module "eks" {
   cluster_version = local.cluster_version
 
   vpc_id = data.aws_vpc.main.id
-  # Note: Only if you want to run blockchain nodes on kubernetes,
-  # the public subnet ids should be added to this list
   subnet_ids = concat(data.aws_subnets.private.ids, data.aws_subnets.public.ids)
-  # Also normally they should only be in private subnets
-  control_plane_subnet_ids = data.aws_subnets.public.ids
 
-  # Note: This should never be enabled on a production cluster!
-  # Normally you would have a bastion host or something similar
+  # Normally they should only be in private subnets and never be public!
+  # This is only for this example, so we do not need to run a bastion host or similar
+  control_plane_subnet_ids = data.aws_subnets.public.ids
   cluster_endpoint_public_access = true
   cluster_endpoint_public_access_cidrs = [
     local.my_ip

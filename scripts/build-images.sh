@@ -2,9 +2,12 @@
 
 set -eo pipefail
 
+AWS_REGION="eu-central-1"
+
 source .env
 
-AWS_REGION="eu-central-1"
+echo "logging into ECR"
+aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
 
 echo "building and pushing geth"
 docker buildx build \

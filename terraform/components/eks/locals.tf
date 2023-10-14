@@ -22,8 +22,8 @@ locals {
       instance_type = "m7g.xlarge"
 
       min_size     = 0
-      max_size     = 1
-      desired_size = 1
+      max_size     = 3
+      desired_size = 3
 
       # Note: Blockchain nodes need to be in a public subnet for p2p networking
       subnet_ids = data.aws_subnets.public.ids
