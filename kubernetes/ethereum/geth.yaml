@@ -27,6 +27,7 @@ spec:
     app: geth
   # Make sure the same client comes to the same node
   sessionAffinity: ClientIP
+  clusterIP: None
 ---
 apiVersion: v1
 kind: Service
@@ -57,7 +58,7 @@ metadata:
   name: geth
   namespace: geth
 spec:
-  serviceName: "geth"
+  serviceName: "geth-auth-rpc"
   replicas: 3
   selector:
     matchLabels:

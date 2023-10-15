@@ -68,6 +68,11 @@ spec:
               protocol: TCP
             - containerPort: 6060
               name: metrics
+          env:
+            - name: NODE_INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
           resources:
             requests:
               memory: "3Gi"

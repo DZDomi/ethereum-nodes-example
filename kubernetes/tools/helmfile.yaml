@@ -4,6 +4,7 @@ repositories:
   - name: grafana
     url: https://grafana.github.io/helm-charts
 
+# Note: In production you have to enable persistance for both of them
 releases:
   - name: prometheus
     namespace: prometheus

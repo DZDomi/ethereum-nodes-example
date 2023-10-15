@@ -2,7 +2,7 @@ accept-terms-of-use: true
 
 datadir: /opt/ethereum/consensus
 
-execution-endpoint: http://geth-auth-rpc.geth.svc.cluster.local
+execution-endpoint: http://geth-<node-index>.geth-auth-rpc.geth.svc.cluster.local:8551
 jwt-secret: /opt/ethereum/shared/jwt.hex
 
 # Note: Obviously you need to make sure you trust this provider

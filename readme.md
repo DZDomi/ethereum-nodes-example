@@ -55,9 +55,9 @@ remote state like S3 or terraform cloud is required.
 The terraform components need to be run in a specific order, because some components depend on others.
 The order of the deployments units is the following:
 
-* `networking` (apply time approx: 3-4 minutes)
+* `networking` (apply time approx: 2-3 minutes)
 * `ecr` (apply time approx: 30 seconds)
-* `eks` (apply time approx: 10+ minutes)
+* `eks` (apply time approx: 15+ minutes)
 
 Before going into each component make sure you have valid credentials for the AWS account you want to deploy the infrastructure into.
 `aws-vault` is a great tool for setting up valid credentials before running any terraform/aws commands.
@@ -162,7 +162,8 @@ You can leave the other inputs untouched and just click on save.
 
 #### Importing dashboards
 
-TODO
+In the `kubernetes/miscellaneous/grafana/` folder you will find 2 dashboards for prysm and geth. 
+You can import those with the grafana UI under: http://localhost:3000/dashboard/import 
 
 ## Execution & Consensus client & go-monitor
 
@@ -202,7 +203,13 @@ This will create the following kubernetes objects:
 
 If everything was successful you can check the logs of geth/prysm/go-monitor with:
 
-[//]: # (TODO:)
 ```shell
-TODO
+kubectl logs -f -n geth statefulsets/geth
+kubectl logs -f -n prysm statefulsets/prysm
+kubectl logs -f -n go-monitor deployments/monitor
 ```
+
+## Cleanup
+
+To remove all the created components just run `terraform destroy` in the reverse order of the creation. **Also make sure
+to remove all created volumes in AWS, because the retention policy in kubernetes is enabled for the blockchain storage.**
