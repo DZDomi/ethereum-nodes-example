@@ -53,7 +53,7 @@ remote state like S3 or terraform cloud is required.
 ### Deployment
 
 The terraform components need to be run in a specific order, because some components depend on others.
-The order of the deployments units is the following:
+The order of the deployment units is the following:
 
 * `networking` (apply time approx: 2-3 minutes)
 * `ecr` (apply time approx: 30 seconds)
