@@ -86,7 +86,7 @@ Each of the custom deployments we are going to run, requires a docker image to r
 These images are:
 
 * `geth`: Execution client, can be found under `docker/geth/Dockerfile`
-* `prsym`: Consensus client, can be found under `docker/prsym/Dockerfile`
+* `prysm`: Consensus client, can be found under `docker/prysm/Dockerfile`
 * `go-monitor`: Custom go tool, that will output the connected peers of the execution client. Can be found under `go-monitor/build/Dockerfile`
 
 ### Deployment

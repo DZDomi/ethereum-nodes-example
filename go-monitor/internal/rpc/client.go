@@ -69,7 +69,7 @@ func (c *client) prepareRequest(id uint, method string) (io.Reader, error) {
 	return bytes.NewReader(marshalledResponse), nil
 }
 
-func (c *client) doRequest(id uint, method string, data any) error {
+func (c *client) doRequest(id uint, method string, data any) (err error) {
 	request, err := c.prepareRequest(id, method)
 	if err != nil {
 		return err
@@ -86,12 +86,14 @@ func (c *client) doRequest(id uint, method string, data any) error {
 			err = body.Close()
 		}
 	}(response.Body)
+	if response.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
+
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(body, &data)
-	// Note: This is needed for the defer method
-	return err
+	return json.Unmarshal(body, data)
 }

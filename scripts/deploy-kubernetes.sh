@@ -14,6 +14,7 @@ function replace_aws_account_id() {
 }
 
 temp_dir="$(mktemp -d)"
+trap 'rm -rf "$temp_dir"' EXIT
 
 replace_aws_account_id
 
@@ -27,5 +28,3 @@ kubectl apply -f "$temp_dir/prysm.yaml"
 kubectl apply -f kubernetes/go-monitor/namespace.yaml
 kubectl apply -f kubernetes/go-monitor/configmap.yaml
 kubectl apply -f "$temp_dir/deployment.yaml"
-
-rm -rf "$temp_dir"

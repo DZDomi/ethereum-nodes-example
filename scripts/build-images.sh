@@ -30,5 +30,5 @@ docker buildx build \
   --push \
   --platform linux/arm64 \
   -f go-monitor/build/Dockerfile \
-  -t "$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/ethereum-nodes-example/monitor:v1.0.0" \
+  -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ethereum-nodes-example/monitor:v1.0.0" \
   go-monitor
