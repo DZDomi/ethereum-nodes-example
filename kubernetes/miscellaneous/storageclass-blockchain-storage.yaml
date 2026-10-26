@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: blockchain-storage
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp3
+  # Note: Taken from here:
+  # https://gist.github.com/yorickdowne/f3a3e79a573bf35767cd002cc977b038#cloud
+  # This can also be set lower, ofc it depends on how fast you want to sync your node
+  iops: "10000"
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain

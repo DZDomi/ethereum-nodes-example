@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: geth
+  name: geth-rpc
+spec:
+  ports:
+    - name: rpc
+      targetPort: rpc
+      port: 80
+  selector:
+    app: geth
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: geth
+  name: geth-auth-rpc
+spec:
+  ports:
+    - name: auth-rpc
+      targetPort: auth-rpc
+      port: 80
+  selector:
+    app: geth
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: geth
+  name: geth-p2p
+spec:
+  type: NodePort
+  ports:
+    - name: p2p-tcp
+      targetPort: p2p-tcp
+      port: 30303
+      nodePort: 30303
+      protocol: TCP
+    - name: p2p-udp
+      targetPort: p2p-udp
+      port: 30303
+      nodePort: 30303
+      protocol: UDP
+  selector:
+    app: geth
+  # Make sure the same client comes to the same node
+  sessionAffinity: ClientIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: geth
+  namespace: geth
+spec:
+  serviceName: "geth-auth-rpc"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: geth
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /debug/metrics/prometheus
+        prometheus.io/port: "6060"
+      labels:
+        app: geth
+    spec:
+      nodeSelector:
+        name: nodes
+      # Since we are using node ports, we need to make sure to not schedule the same
+      # p2p client on the same machine, otherwise request will get routed to the wrong service
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app: geth
+      securityContext:
+        fsGroup: 65000
+      containers:
+        - name: geth
+          image: <aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com/ethereum-nodes-example/geth:v1.13.3
+          ports:
+            - containerPort: 8545
+              name: rpc
+            - containerPort: 8551
+              name: auth-rpc
+            - containerPort: 30303
+              name: p2p-tcp
+              protocol: TCP
+            - containerPort: 30303
+              name: p2p-udp
+              protocol: UDP
+            - containerPort: 6060
+              name: metrics
+          resources:
+            requests:
+              memory: "10Gi"
+            limits:
+              memory: "16Gi"
+          volumeMounts:
+            - name: jwt-shared
+              readOnly: true
+              mountPath: /opt/ethereum/shared
+            - name: chaindata
+              mountPath: /opt/ethereum/execution
+      volumes:
+        - name: jwt-shared
+          secret:
+            secretName: jwt-shared
+        - name: chaindata
+          persistentVolumeClaim:
+            claimName: chaindata
+  volumeClaimTemplates:
+    - metadata:
+        name: chaindata
+      spec:
+        storageClassName: blockchain-storage
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            # Note: Obviously in reality this would be more like 1-2 Terabytes
+            storage: 100Gi
